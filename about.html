@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 - 我的个人博客</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- 引入Chart.js用于技能图表 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <!-- 自定义Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6', // 主色调：蓝色
+                        secondary: '#64748b', // 次要色调：浅灰蓝
+                        accent: '#f97316', // 强调色：橙色
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .nav-link {
+                @apply px-4 py-2 hover:text-primary transition-colors;
+            }
+            .timeline-item {
+                @apply relative pl-8 pb-8 before:absolute before:left-0 before:top-1 before:h-full before:w-0.5 before:bg-primary/20 last:before:h-6;
+            }
+            .timeline-dot {
+                @apply absolute left-[-6px] top-1 w-3 h-3 rounded-full bg-primary;
+            }
+            .skill-bar {
+                @apply h-2 rounded-full bg-gray-200 overflow-hidden;
+            }
+            .skill-progress {
+                @apply h-full rounded-full bg-primary transition-all duration-1000 ease-out;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <!-- 导航条 (全局共用) -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center space-x-2">
+                <span class="text-2xl font-bold text-primary">Blog<span class="text-accent">Me</span></span>
+            </a>
+            
+             <!-- 桌面端导航 - 带跳转链接 -->
+        <nav class="hidden md:flex items-center space-x-1">
+            <a href="index.html" class="nav-link">首页</a>
+            <a href="articles.html" class="nav-link">文章</a>
+            <a href="article-detail.html" class="nav-link">分类</a>
+            <a href="about.html" class="nav-link">关于我</a>
+            <a href="portfolio.html" class="nav-link">作品集</a>
+        </nav>
+            
+            <!-- 移动端汉堡菜单按钮 -->
+            <button id="menuBtn" class="md:hidden text-gray-700 focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+         <!-- 移动端导航菜单 (默认隐藏) - 带跳转链接 -->
+    <div id="mobileMenu" class="md:hidden bg-white shadow-md hidden px-4 py-2">
+        <nav class="flex flex-col space-y-2 py-2">
+            <a href="index.html" class="py-2 px-4 hover:bg-gray-50 rounded">首页</a>
+            <a href="articles.html" class="py-2 px-4 hover:bg-gray-50 rounded">文章</a>
+            <a href="article-detail.html" class="py-2 px-4 hover:bg-gray-50 rounded">分类</a>
+            <a href="about.html" class="py-2 px-4 hover:bg-gray-50 rounded">关于我</a>
+            <a href="portfolio.html" class="py-2 px-4 hover:bg-gray-50 rounded">作品集</a>
+        </nav>
+    </div>
+</header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- 页面标题 -->
+        <section class="mb-10 text-center">
+            <h1 class="text-4xl font-bold mb-3">关于我</h1>
+            <p class="text-xl text-secondary max-w-2xl mx-auto">了解我的故事，我的生活，我的成长</p>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- 侧边栏：个人信息卡片 -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden sticky top-24">
+                    <div class="bg-primary/10 p-6 text-center">
+                        <img src="https://picsum.photos/200/200" alt="个人头像" class="w-32 h-32 rounded-full mx-auto border-4 border-white shadow-md mb-4">
+                        <h2 class="text-2xl font-bold">小三</h2>
+                        <p class="text-secondary mt-1">中学省 / 网络博主</p>
+                    </div>
+                    
+                    <div class="p-6">
+                        <!-- 个人简介 -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fas fa-user text-primary mr-2"></i> 个人简介
+                            </h3>
+                            <p class="text-gray-600 text-sm">
+                                热爱前端开发的程序员，热衷于分享技术知识和实战经验。拥有1年Web开发经验，擅长现代前端技术栈，致力于打造高性能、用户体验优秀的Web应用。
+                            </p>
+                        </div>
+                        
+                        <!-- 基本信息 -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fas fa-info-circle text-primary mr-2"></i> 基本信息
+                            </h3>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex justify-between">
+                                    <span class="text-gray-500">姓名:</span>
+                                    <span class="font-medium">小三</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span class="text-gray-500">年龄:</span>
+                                    <span class="font-medium">18</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span class="text-gray-500">职业:</span>
+                                    <span class="font-medium">前端技术专家</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span class="text-gray-500">城市:</span>
+                                    <span class="font-medium">重庆</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- 联系方式 -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fas fa-contact-card text-primary mr-2"></i> 联系方式
+                            </h3>
+                            <ul class="space-y-3 text-sm">
+                                <li class="flex items-center">
+                                    <i class="fas fa-envelope text-primary w-5 text-center mr-2"></i>
+                                    <a href="mailto:zhangsan@example.com" class="text-gray-600 hover:text-primary transition-colors">zhangsan@example.com</a>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fab fa-github text-primary w-5 text-center mr-2"></i>
+                                    <a href="https://github.com/zhangsan" target="_blank" class="text-gray-600 hover:text-primary transition-colors">github.com/zhangsan</a>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fab fa-weixin text-primary w-5 text-center mr-2"></i>
+                                    <span class="text-gray-600">zhangsan_tech</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fab fa-twitter text-primary w-5 text-center mr-2"></i>
+                                    <a href="https://twitter.com/zhangsan" target="_blank" class="text-gray-600 hover:text-primary transition-colors">@zhangsan_dev</a>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-phone text-primary w-5 text-center mr-2"></i>
+                                    <span class="text-gray-600">138****8888</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- 个人详细介绍 -->
+                <section class="bg-white rounded-lg shadow-sm p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-100">我的故事</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="md:w-1/3">
+                                <img src="https://picsum.photos/600/400?random=10" alt="教育背景" class="w-full h-48 object-cover rounded-lg shadow-sm">
+                            </div>
+                            <div class="md:w-2/3">
+                                <h3 class="text-xl font-semibold mb-3">教育背景</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    我毕业于重庆交通大学计算机科学与技术专业，获得中学学位。在校期间，我专注于Web技术和人机交互方向的研究，发表了多篇关于前端性能优化的学术论文。
+                                </p>
+                                <p class="text-gray-700 leading-relaxed mt-2">
+                                    研究生阶段，我参与了多个校企合作项目，将所学知识应用到实际项目中，积累了宝贵的工程实践经验。这段经历让我深刻理解了理论与实践结合的重要性。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="md:w-1/3 md:order-2">
+                                <img src="https://picsum.photos/600/400?random=11" alt="职业路径" class="w-full h-48 object-cover rounded-lg shadow-sm">
+                            </div>
+                            <div class="md:w-2/3 md:order-1">
+                                <h3 class="text-xl font-semibold mb-3">职业路径</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    毕业后，我加入了巴巴的前端技术团队，负责电商平台的前端架构设计和性能优化工作。在阿里的2年时间里，我从一名初级工程师成长为高级工程师，主导了多个核心项目的前端重构。
+                                </p>
+                                <p class="text-gray-700 leading-relaxed mt-2">
+                                    随后，我加入了一家创业公司担任前端技术负责人，带领团队构建了完整的前端技术体系，从工程化、组件库到性能监控，全方位提升了产品的前端质量和开发效率。
+                                </p>
+                                <p class="text-gray-700 leading-relaxed mt-2">
+                                    现在，我作为一名独立开发者和技术顾问，为多家企业提供前端技术咨询和培训服务，同时运营个人技术博客，分享我的经验和见解。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="md:w-1/3">
+                                <img src="https://picsum.photos/600/400?random=12" alt="兴趣爱好" class="w-full h-48 object-cover rounded-lg shadow-sm">
+                            </div>
+                            <div class="md:w-2/3">
+                                <h3 class="text-xl font-semibold mb-3">兴趣爱好</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    除了编程之外，我热爱阅读、旅行和摄影。我相信广博的知识面和丰富的生活体验能够激发更多的创作灵感。
+                                </p>
+                                <p class="text-gray-700 leading-relaxed mt-2">
+                                    我喜欢研究新技术，经常参加各类技术会议和开源社区活动。同时，我也热衷于分享，定期在技术社区发表文章，参与线上线下的技术交流。
+                                </p>
+                                <p class="text-gray-700 leading-relaxed mt-2">
+                                    在业余时间，我喜欢跑步和健身，保持良好的身体状态，毕竟写代码也是个体力活。我也喜欢烹饪，尝试各种美食的制作，这和编程一样，都需要耐心和创造力。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 技能图表 -->
+                <section class="bg-white rounded-lg shadow-sm p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-100">我的技能</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- 技能条形图 -->
+                        <div>
+                            <canvas id="skillsChart" height="250"></canvas>
+                        </div>
+                        
+                        <!-- 技能进度条 -->
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">HTML5/CSS3</span>
+                                    <span>95%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress bg-primary" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">JavaScript/TypeScript</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress bg-primary" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">React/Vue</span>
+                                    <span>88%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress bg-primary" style="width: 88%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">Node.js</span>
+                                    <span>75%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress bg-primary" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">UI/UX设计</span>
+                                    <span>70%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress bg-primary" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">工程化/性能优化</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress bg-primary" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 时间轴 -->
+                <section class="bg-white rounded-lg shadow-sm p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-100">成长历程</h2>
+                    
+                    <div class="relative pl-8">
+                        <!-- 时间轴项目1 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="bg-primary/5 p-4 rounded-lg inline-block w-full">
+                                <span class="text-sm text-primary font-medium">2014年</span>
+                                <h3 class="text-lg font-semibold mt-1 mb-2">毕业并加入巴巴</h3>
+                                <p class="text-gray-600 text-sm">
+                                    从重庆交通大学中学毕业，加入巴巴前端技术团队，开始职业生涯，主要负责淘宝首页的前端开发工作。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- 时间轴项目2 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="bg-primary/5 p-4 rounded-lg inline-block w-full">
+                                <span class="text-sm text-primary font-medium">2016年</span>
+                                <h3 class="text-lg font-semibold mt-1 mb-2">晋升高级工程师</h3>
+                                <p class="text-gray-600 text-sm">
+                                    因在多个核心项目中的突出表现，晋升为低级前端工程师，开始负责前端架构设计和性能优化工作。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- 时间轴项目3 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="bg-primary/5 p-4 rounded-lg inline-block w-full">
+                                <span class="text-sm text-primary font-medium">2018年</span>
+                                <h3 class="text-lg font-semibold mt-1 mb-2">加入创业公司任技术负责人</h3>
+                                <p class="text-gray-600 text-sm">
+                                    离开巴巴，加入一家创业公司担任前端技术负责人，负责构建完整的前端技术体系和团队建设。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- 时间轴项目4 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="bg-primary/5 p-4 rounded-lg inline-block w-full">
+                                <span class="text-sm text-primary font-medium">2020年</span>
+                                <h3 class="text-lg font-semibold mt-1 mb-2">开始运营个人技术博客</h3>
+                                <p class="text-gray-600 text-sm">
+                                    创办个人技术博客，分享前端开发经验和最佳实践，逐渐积累了一批忠实读者。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- 时间轴项目5 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="bg-primary/5 p-4 rounded-lg inline-block w-full">
+                                <span class="text-sm text-primary font-medium">2022年</span>
+                                <h3 class="text-lg font-semibold mt-1 mb-2">成为独立开发者/技术顾问</h3>
+                                <p class="text-gray-600 text-sm">
+                                    成为独立开发者，为多家企业提供前端技术咨询和培训服务，同时专注于个人技术品牌的打造。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- 时间轴项目6 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="bg-primary/5 p-4 rounded-lg inline-block w-full">
+                                <span class="text-sm text-primary font-medium">至今</span>
+                                <h3 class="text-lg font-semibold mt-1 mb-2">持续学习与分享</h3>
+                                <p class="text-gray-600 text-sm">
+                                    持续关注前端技术发展，不断学习新技术，坚持分享原创内容，帮助更多开发者成长。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 联系方式扩展 -->
+                <section class="bg-white rounded-lg shadow-sm p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-100">联系我</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold mb-4">工作合作</h3>
+                            <p class="text-gray-600 mb-4">
+                                如果你有前端开发、技术咨询、企业培训等方面的合作需求，欢迎通过以下方式联系我：
+                            </p>
+                            <ul class="space-y-3">
+                                <li class="flex items-center">
+                                    <i class="fas fa-envelope text-primary text-lg w-8 text-center"></i>
+                                    <span>邮箱：<a href="mailto:business@zhangsan.com" class="text-primary hover:underline">business@zhangsan.com</a></span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fab fa-weixin text-primary text-lg w-8 text-center"></i>
+                                    <span>微信：zhangsan_business (请注明来意)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-file-alt text-primary text-lg w-8 text-center"></i>
+                                    <span>简历：<a href="#" class="text-primary hover:underline">下载我的简历</a></span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold mb-4">技术交流</h3>
+                            <p class="text-gray-600 mb-4">
+                                如果你有技术问题想要交流，或者只是想交个朋友，欢迎加入我的技术交流群：
+                            </p>
+                            <ul class="space-y-3">
+                                <li class="flex items-center">
+                                    <i class="fab fa-github text-primary text-lg w-8 text-center"></i>
+                                    <span>GitHub：<a href="https://github.com/zhangsan" target="_blank" class="text-primary hover:underline">github.com/zhangsan</a></span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fab fa-twitter text-primary text-lg w-8 text-center"></i>
+                                    <span>Twitter：<a href="https://twitter.com/zhangsan_dev" target="_blank" class="text-primary hover:underline">@zhangsan_dev</a></span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-comments text-primary text-lg w-8 text-center"></i>
+                                    <span>技术交流群：扫码添加微信，备注"加群"</span>
+                                </li>
+                            </ul>
+                            <div class="mt-4">
+                                <img src="https://picsum.photos/150/150" alt="微信交流群二维码" class="w-32 h-32 rounded border border-gray-200">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 (全局共用) -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-xl font-bold">Blog<span class="text-accent">Me</span></p>
+                    <p class="text-gray-400 text-sm mt-1">分享技术，记录成长</p>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-weixin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                <p>© 2024 BlogMe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 交互逻辑 -->
+    <script>
+        // 移动端汉堡菜单切换 (全局共用)
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            // 切换汉堡/关闭图标
+            const icon = menuBtn.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+            }
+        });
+
+        // 点击移动端菜单链接后自动关闭菜单
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuBtn.querySelector('i').classList.replace('fa-times', 'fa-bars');
+            });
+        });
+
+        // 技能图表初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化技能条形图
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            const skillsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['HTML5/CSS3', 'JavaScript/TS', 'React/Vue', 'Node.js', 'UI/UX', '工程化'],
+                    datasets: [{
+                        label: '技能熟练度 (%)',
+                        data: [95, 90, 88, 75, 70, 85],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(59, 130, 246, 0.5)',
+                            'rgba(59, 130, 246, 0.4)',
+                            'rgba(59, 130, 246, 0.75)'
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(59, 130, 246, 1)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `熟练度: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+
+            // 技能进度条动画效果
+            const skillProgressBars = document.querySelectorAll('.skill-progress');
+            // 监听滚动，当元素进入视口时触发动画
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const progressBar = entry.target;
+                        const width = progressBar.style.width;
+                        progressBar.style.width = '0';
+                        setTimeout(() => {
+                            progressBar.style.width = width;
+                        }, 100);
+                        observer.unobserve(progressBar);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            skillProgressBars.forEach(bar => {
+                observer.observe(bar);
+            });
+        });
+    </script>
+</body>
+</html>
